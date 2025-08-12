@@ -14,27 +14,28 @@ import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
 
 /* Heptane WCET XSD (cache = élément <CACHE .../>) */
 import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
-//import XSDMetaModel HEPTANE_WCET2 from [_ +"xmlFiles/HeptaneWCET"];
+//import [_ +"xmlFiles/HeptaneWCET"] as Hept;
 //import XSDMetaModel OTAWA_CACHE from [_ +"xmlFiles/OtawaCache"];
 import XSDMetaModel HEPTANE_WCET2 from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
 /* === OTAWA Cache XSD (icache/dcache) === */
 
 import XMLComplexType ICACHE2 from [OTAWA_CACHE:"icache"];
-import XMLComplexType HCACHE2 from [HEPTANE_WCET2:"CACHE"];
 
-typedef XMLIndividualType(xsdType=ICACHE) as HeptaneCache;
-typedef XMLIndividualType(xsdType=ICACHE)  as OICache;
+import XMLComplexType HCACHE2 from [HEPTANE_WCET2:"HeptaneCacheType"];
+
+typedef XMLIndividualType(xsdType=HCACHE2) as HeptaneCache;
+typedef XMLIndividualType(xsdType=ICACHE2)  as OICache;
 
 
 @URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WCETFederation.fml")
 @Author("PC")
 public model WCETFederation {
  
-  XMLModel heptaneWCET with XMLModelSlot(metaModel=null);
+  XMLModel heptaneWCET with XMLModelSlot(metaModel=HEPTANE_WCET2);
  XMLModel otawaCache with XMLModelSlot(metaModel=OTAWA_CACHE);
  
-  XMLIndividual      iCache  with XMLIndividualRole(container=otawaCache,  xsdType=null);
-    XMLIndividual hCache with XMLIndividualRole(container=heptaneWCET, xsdType=null);
+  OICache      iCache  with XMLIndividualRole(container=otawaCache,  xsdType=ICACHE2);
+    HeptaneCache hCache with XMLIndividualRole(container=heptaneWCET, xsdType=HCACHE2);
 
   /* Hook your resources and build the sync view */
   create(Resource<XMLModel> heptaneWCETRes, Resource<XMLModel> otawaCacheRes) {
@@ -42,7 +43,7 @@ public model WCETFederation {
   connect otawaCache  using parameters.otawaCacheRes;
 
   }
- 
+
 
    public concept Cache {
       Integer h_nbsets  {
@@ -115,7 +116,8 @@ public model WCETFederation {
    o_miss_penalty = h_latency;
    
  
- 
+ //envoyer fichier xml et méthodes maths et fichiers fml
+ //modifier uri des fichiers xsd
    
    }
    public syncOtawaToHeptane() {   

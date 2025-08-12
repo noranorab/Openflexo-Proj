@@ -1,5 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified" attributeFormDefault="unqualified">
+           elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://mem4csd.telecom-paris.fr/HeptaneWCET" targetNamespace="http://mem4csd.telecom-paris.fr/HeptaneWCET">
+  <xs:complexType name="HeptaneCacheType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+          <xs:attribute type="xs:byte" name="nbsets" use="optional"/>
+          <xs:attribute type="xs:byte" name="nbways" use="optional"/>
+          <xs:attribute type="xs:byte" name="cachelinesize" use="optional"/>
+          <xs:attribute type="xs:string" name="replacement_policy" use="optional"/>
+          <xs:attribute type="xs:string" name="type" use="optional"/>
+          <xs:attribute type="xs:byte" name="level" use="optional"/>
+          <xs:attribute type="xs:byte" name="latency" use="optional"/>
+        </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
   <xs:element name="TARGET">
     <xs:complexType>
       <xs:simpleContent>
@@ -11,21 +25,7 @@
       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-  <xs:element name="CACHE">
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:string">
-          <xs:attribute type="xs:byte" name="nbsets" use="optional"/>
-          <xs:attribute type="xs:byte" name="nbways" use="optional"/>
-          <xs:attribute type="xs:byte" name="cachelinesize" use="optional"/>
-          <xs:attribute type="xs:string" name="replacement_policy" use="optional"/>
-          <xs:attribute type="xs:string" name="type" use="optional"/>
-          <xs:attribute type="xs:byte" name="level" use="optional"/>
-          <xs:attribute type="xs:byte" name="latency" use="optional"/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="CACHE" type="HeptaneCacheType"/>
   <xs:element name="MEMORY">
     <xs:complexType>
       <xs:simpleContent>
@@ -292,6 +292,7 @@
           <xs:annotation>
             <xs:documentation> Architecture description </xs:documentation>
           </xs:annotation>
+		  
         </xs:element>
         <xs:element ref="ANALYSIS">
           <xs:annotation>

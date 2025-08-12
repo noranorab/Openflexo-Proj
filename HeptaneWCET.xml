@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- If you keep the XSD without a targetNamespace, use noNamespaceSchemaLocation -->
-<CONFIGURATION xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="HeptaneWCET.xsd">
+<CONFIGURATION>
 
 	<!-- Where inputs are read / outputs are written -->
 	<INPUTOUTPUTDIR name="." />

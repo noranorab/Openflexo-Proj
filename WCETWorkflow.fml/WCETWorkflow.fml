@@ -24,7 +24,7 @@ import XSDMetaModel HEPTANE_WCET2 from ["http://mem4csd.telecom-paris.fr/Heptane
 public model WCETWorkflow {
 
     // Point to input XML files here, could be parameters or static paths
-   XMLModel heptaneWCETRes with XMLModelSlot(metaModel=null);
+   XMLModel heptaneWCETRes with XMLModelSlot(metaModel=HEPTANE_WCET2);
    XMLModel otawaCacheRes with XMLModelSlot(metaModel=OTAWA_CACHE);
 
     // The federation (sync) model instance
