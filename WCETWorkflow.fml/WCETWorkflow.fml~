@@ -1,0 +1,52 @@
+namespace "file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/" as _;
+
+
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+
+import [_ + "WCETConfiguration.fml"];
+import [_ + "WCETFederation.fml"];
+
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+import XSDMetaModel HEPTANE_WCET2 from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WCETWorkflow.fml")
+@Author("PC")
+public model WCETWorkflow {
+
+    // Point to input XML files here, could be parameters or static paths
+   XMLModel heptaneWCETRes with XMLModelSlot(metaModel=null);
+   XMLModel otawaCacheRes with XMLModelSlot(metaModel=OTAWA_CACHE);
+
+    // The federation (sync) model instance
+    WCETFederation federation with ModelInstance();
+    WCETConfiguration configuration with ModelInstance();
+
+    // Initialization/entry-point
+    create(Resource<XMLModel> hRes, Resource<XMLModel> oRes) {
+        connect heptaneWCETRes using parameters.hRes;
+        connect otawaCacheRes using parameters.oRes;
+        // Connect the federation and configuration models as needed
+      //federation.DefaultCreationScheme(heptaneWCETRes, otawaCacheRes);
+    
+     // configuration.create(federation);
+    }
+
+    // Add workflow actions (for UI, or step-by-step run)
+    public synchronizeCaches() {
+       // configuration.PlatformConfig.cacheView.syncToXml();
+    }
+
+    // Add more workflow steps (analysis, reporting, etc.)
+    delete() {
+        //configuration.delete();
+        //federation.delete();
+    }
+}

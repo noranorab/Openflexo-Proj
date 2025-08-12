@@ -1,0 +1,99 @@
+namespace "file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/" as _;
+
+
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+
+
+import [_ + "WCETFederation.fml"];
+
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WCETConfiguration.fml")
+@Author("PC")
+public model WCETConfiguration {
+   
+	WCETFederation fed with ModelInstance();
+
+  create(WCETFederation federation) {
+         fed = parameters.federation;
+    }
+
+   public concept CacheView {
+	    Cache syncCache with ConceptInstance( container=fed,virtualModelInstance=fed);
+	
+	Integer block_bits  {
+            Integer get() {
+          
+                // Assume cachelinesize is power of 2 (enforced in real use)
+                return syncCache.h_cachelinesize;
+            }
+            set(Integer value) {
+                syncCache.h_cachelinesize = value;
+            }
+        };
+
+        Integer way_bits  {
+            Integer get() {
+                return syncCache.h_nbways;
+            }
+            set(Integer value) {
+                syncCache.h_nbways = value;
+            }
+        };
+
+        Integer row_bits  {
+            Integer get() {
+                return syncCache.h_nbsets;
+            }
+            set(Integer value) {
+                syncCache.h_nbsets = value;
+            }
+        };
+
+        // Expose also miss_penalty directly if you want
+        Integer miss_penalty  {
+            Integer get() { return syncCache.h_latency; 
+}
+            set(Integer value) { syncCache.h_latency = value; }
+        };
+
+        // Sync to federation concepts (could add methods here)
+        public syncToXml() {
+        
+           //syncCache.h_cachelinesize = wcet.util.WcetMath.cacheLineSizeFromBlockBits(this.block_bits);
+           syncCache.h_nbways = this.way_bits;
+           syncCache.h_nbsets = this.row_bits;
+           syncCache.h_latency = this.miss_penalty;
+
+            syncCache.syncHeptaneToOtawa();
+        }
+        public syncFromXml() {
+            syncCache.syncOtawaToHeptane();
+            
+            //this.block_bits = wcet.util.WcetMath.blockBitsFromCacheLineSize(syncCache.h_cachelinesize);
+            this.way_bits = syncCache.h_nbways;
+            this.row_bits = syncCache.h_nbsets;
+            this.miss_penalty = syncCache.h_latency;
+        }
+    
+
+      delete();
+
+   }
+   public concept PlatformConfig {
+        CacheView cacheView with ConceptInstance(virtualModelInstance=fed,container=container);
+
+        // Compose more (pipelineView, memoryView...) if needed
+
+        create::_create(required CacheView aCacheView) {
+            cacheView = parameters.aCacheView;
+        }
+        delete() { 
+}
+    }
+	
+
+
+}

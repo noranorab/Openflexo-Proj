@@ -1,0 +1,5 @@
+cachesResource=CachesResource
+listAllXMLIndividualsInCaches=ListAllXMLIndividualsInCaches
+listChildren=ListChildren
+memoryResource=MemoryResource
+pipelineResource=PipelineResource

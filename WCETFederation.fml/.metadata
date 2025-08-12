@@ -1,0 +1,11 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\WCETFederation.fml
+#Tue Aug 12 09:42:34 WEST 2025
+WCETFederation.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
+WCETFederation.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETFederation.fml
+WCETFederation.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot
+WCETFederation.fml.name=WCETFederation
+temp4238944587199108228.txt.IS_XML=false
+WCETFederation.fml.IS_XML=false
+WCETFederation.fml.dependenciesList=http\://mem4csd.telecom-paris.fr/OtawaCache,http\://mem4csd.telecom-paris.fr/HeptaneWCET
+WCETFederation.fml.version=0.1
+WCETFederation.fml.flexoConceptsList=Cache

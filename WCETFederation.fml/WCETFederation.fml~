@@ -1,0 +1,143 @@
+namespace "file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/" as _;
+
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.foundation.fml.VirtualModel;
+import wcet.util.WcetMath;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+
+/* Heptane WCET XSD (cache = élément <CACHE .../>) */
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+//import XSDMetaModel HEPTANE_WCET2 from [_ +"xmlFiles/HeptaneWCET"];
+//import XSDMetaModel OTAWA_CACHE from [_ +"xmlFiles/OtawaCache"];
+import XSDMetaModel HEPTANE_WCET2 from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+/* === OTAWA Cache XSD (icache/dcache) === */
+
+import XMLComplexType ICACHE2 from [OTAWA_CACHE:"icache"];
+import XMLComplexType HCACHE2 from [HEPTANE_WCET2:"CACHE"];
+
+typedef XMLIndividualType(xsdType=ICACHE) as HeptaneCache;
+typedef XMLIndividualType(xsdType=ICACHE)  as OICache;
+
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WCETFederation.fml")
+@Author("PC")
+public model WCETFederation {
+ 
+  XMLModel heptaneWCET with XMLModelSlot(metaModel=null);
+ XMLModel otawaCache with XMLModelSlot(metaModel=OTAWA_CACHE);
+ 
+  XMLIndividual      iCache  with XMLIndividualRole(container=otawaCache,  xsdType=null);
+    XMLIndividual hCache with XMLIndividualRole(container=heptaneWCET, xsdType=null);
+
+  /* Hook your resources and build the sync view */
+  create(Resource<XMLModel> heptaneWCETRes, Resource<XMLModel> otawaCacheRes) {
+  connect heptaneWCET using parameters.heptaneWCETRes;
+  connect otawaCache  using parameters.otawaCacheRes;
+
+  }
+ 
+
+   public concept Cache {
+      Integer h_nbsets  {
+         Integer get() {
+            return hCache.nbsets;
+         }
+         set(Integer value) {
+         hCache.nbsets = value;
+         }
+      };
+      Integer h_nbways  {
+         Integer get() {
+            return hCache.nbways;
+         }
+         set(Integer value) {
+         hCache.nbways = value;
+         }
+      };
+      Integer h_cachelinesize   {
+         Integer get() { 
+            return hCache.cachelinesize;
+         }
+         set(Integer value) {
+         hCache.cachelinesize = value;
+         }
+      };
+       Integer h_latency   {
+         Integer get() {
+            return hCache.latency;
+         }
+         set(Integer value) {
+         hCache.latency = value;
+         }
+      };
+      
+      Integer o_block_bits   {
+         Integer get() { return iCache.blockBits;
+         }
+         set(Integer value) {
+         iCache.blockBits   = value;
+         }
+      };
+      Integer o_way_bits   {
+         Integer get() { return iCache.wayBits;
+         }
+         set(Integer value) {
+         iCache.wayBits     = value;
+         }
+      };
+      Integer o_row_bits   {
+         Integer get() {return iCache.rowBits ;
+         }
+         set(Integer value) {
+         iCache.rowBits     = value;
+         }
+      };
+      Integer o_miss_penalty   {
+         Integer get() {return iCache.missPenalty;
+         }
+         set(Integer value) {
+         iCache.missPenalty = value;
+         }
+      };
+
+       public syncHeptaneToOtawa() {  
+  //iCache.blockBits = WcetMath.blockBitsFromCacheLineSize(hCache.cachelinesize);
+   o_block_bits = h_cachelinesize;
+   o_way_bits = h_nbways;
+   o_row_bits = h_nbsets;
+   o_miss_penalty = h_latency;
+   
+ 
+ 
+   
+   }
+   public syncOtawaToHeptane() {   
+ // iCache.blockBits = WcetMath.blockBitsFromCacheLineSize(hCache.cachelinesize);
+   h_cachelinesize = o_block_bits;
+   h_nbways = o_way_bits;
+    h_nbsets = o_row_bits;
+    h_latency = o_miss_penalty;
+   
+   }
+   delete();
+   
+   }
+
+
+  
+   
+    /* Clean-up */
+  delete();
+
+   
+
+   
+}
+ 

@@ -1,0 +1,8 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\WCETFed.fml
+#Sun Aug 03 13:53:58 WEST 2025
+WCETFed.fml.IS_XML=false
+WCETFed.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
+WCETFed.fml.name=WCETFed
+WCETFed.fml.uri=http\://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml
+WCETFed.fml.version=0.1
+WCETFed.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot

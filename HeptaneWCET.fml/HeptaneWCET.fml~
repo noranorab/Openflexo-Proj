@@ -1,0 +1,36 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+
+import XMLComplexType H_CACHE         from [HEPTANE_WCET:"CACHE"];
+
+
+typedef XMLIndividualType(xsdType=H_CACHE)         as HeptaneCache;
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/HeptaneWCET.fml")
+@Author("PC")
+public model HeptaneWCET {
+	XMLModel heptaneWCET with XMLModelSlot(metaModel=HEPTANE_WCET);
+
+   HeptaneCache[0,*]    caches        with XMLIndividualRole(container=heptaneWCET, xsdType=H_CACHE);
+
+    create(Resource<XMLModel> heptaneWCETRes) {
+      connect heptaneWCET using parameters.heptaneWCETRes;
+
+      caches        = select HeptaneCache            from heptaneWCET;
+
+      for (HeptaneCache i : caches) {
+      log "XMLIndividual in caches: " + i;
+    }
+    }
+    public listAllXMLIndividualsInCaches() {
+    for (HeptaneCache i : caches) {
+      log "XMLIndividual in caches: " + i;
+    }
+  }
+}

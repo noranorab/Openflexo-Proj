@@ -1,0 +1,71 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType$XMLComplexTypeImpl_$$_jvstb16_79;
+
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+
+import XMLComplexType HCACHE from [HEPTANE_WCET:"CACHE"];
+import XMLComplexType ICACHE from [OTAWA_CACHE:"icache"];
+
+
+
+
+@URI("http://mem4csd.telecom-paris.fr/OtawaPipeline/TestOtawa.fml")
+public model WCETFed {
+   XMLModel caches with XMLModelSlot(metaModel=OTAWA_CACHE);
+   XMLModel memory with XMLModelSlot(metaModel=null);
+   XMLModel pipeline with XMLModelSlot(metaModel=null);
+   
+   XMLIndividual processor with XMLIndividualRole(container=pipeline,xsdType=null);
+
+   create(Resource<XMLModel> cachesResource, Resource<XMLModel> memoryResource, Resource<XMLModel> pipelineResource) {
+      connect caches using  parameters.cachesResource;
+      connect memory using  parameters.memoryResource;
+      connect pipeline using  parameters.pipelineResource;
+      //caches = parameters.cachesResource.resourceData;
+      //memory = parameters.memoryResource.resourceData;
+      //pipeline = parameters.pipelineResource.resourceData;
+      log "Caches: " + caches;
+      log "Memory: " + memory;
+      log "Pipeline: " + pipeline;
+      processor = (Processor)pipeline.root;
+   }
+
+   public debug() {
+      log "Processor=" + processor;
+      Stages stages = processor.stages;
+      log "Stages:" + stages;
+      for (Object stage : stages.stages) {
+         log "Stage:" + stage + " name=" + stage.name;
+      }
+   }
+   
+   public List<XMLIndividual> listAllXMLIndividuals() {
+      List<XMLIndividual> returned = new ArrayList();
+      for (XMLIndividual anObject : select XMLIndividual from caches) {
+         log "XMLIndividual: " + anObject;
+         returned.add(anObject);
+      }
+      return returned;
+   }
+
+   public List<Stage> listAllStages() {
+      List<Stage> returned = new ArrayList();
+      for (Object stage : select Stage from pipeline) {
+         log "Stage: " + stage;
+         returned.add(stage);
+      }
+      return returned;
+   }
+
+   delete() {
+      delete processor;
+   }
+
+
+}

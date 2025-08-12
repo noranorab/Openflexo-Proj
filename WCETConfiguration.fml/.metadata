@@ -1,0 +1,11 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\WCETConfiguration.fml
+#Tue Aug 12 09:24:53 WEST 2025
+WCETConfiguration.fml.requiredModelSlotList=org.openflexo.foundation.fml.rt.FMLRTModelSlot
+WCETConfiguration.fml.dependenciesList=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETFederation.fml
+WCETConfiguration.fml.flexoConceptsList=CacheView,PlatformConfig
+temp2669334900940384147.txt.IS_XML=false
+WCETConfiguration.fml.name=WCETConfiguration
+WCETConfiguration.fml.version=0.1
+WCETConfiguration.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETConfiguration.fml
+WCETConfiguration.fml.IS_XML=false
+WCETConfiguration.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel

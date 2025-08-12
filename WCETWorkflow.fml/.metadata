@@ -1,0 +1,9 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\WCETWorkflow.fml
+#Tue Aug 12 09:42:40 WEST 2025
+WCETWorkflow.fml.dependenciesList=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETConfiguration.fml,file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETFederation.fml,http\://mem4csd.telecom-paris.fr/OtawaCache,http\://mem4csd.telecom-paris.fr/HeptaneWCET
+WCETWorkflow.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WCETWorkflow.fml
+WCETWorkflow.fml.version=0.1
+WCETWorkflow.fml.IS_XML=false
+WCETWorkflow.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot,org.openflexo.foundation.fml.rt.FMLRTModelSlot
+WCETWorkflow.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
+WCETWorkflow.fml.name=WCETWorkflow
