@@ -1,0 +1,211 @@
+namespace "file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/" as _;
+
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import org.openflexo.foundation.fml.VirtualModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+// import wcet.util.WcetMath;  // Uncomment if you actually use it
+
+/* === XSD meta-models (URIs or file-based) ================================ */
+/* OTAWA Cache XSD (icache / dcache). If you prefer local file, you can use:
+   import XSDMetaModel OTAWA_CACHE from [_ + "xmlFiles/OtawaCache.xsd"];
+*/
+import XSDMetaModel OTAWA_CACHE    from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+
+/* Heptane WCET XSD (CACHE element has named type HeptaneCacheType).
+   If you prefer local file, use:
+   import XSDMetaModel HEPTANE_WCET from [_ + "xmlFiles/HeptaneWCET.xsd"];
+*/
+import XSDMetaModel HEPTANE_WCET   from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+
+/* === XML complex types ==================================================== */
+import XMLComplexType ICACHE_TYPE  from [OTAWA_CACHE:"icache"];
+import XMLComplexType HCACHE_TYPE  from [HEPTANE_WCET:"HeptaneCacheType"];
+
+/* === FML typedefs to make roles strongly typed =========================== */
+typedef XMLIndividualType(xsdType=HCACHE_TYPE) as HeptaneCache;
+typedef XMLIndividualType(xsdType=ICACHE_TYPE) as OtawaICache;
+
+/* =========================================================================
+   All-in-one VM: resources, roles, sync logic, and a small workflow API
+   ========================================================================= */
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WorkflowWCET.fml")
+@Author("PC")
+public model WorkflowWCET {
+
+  /* ---- Bind the two XML instance resources (the actual XML files) ---- */
+  XMLModel heptaneWCETRes with XMLModelSlot(metaModel=HEPTANE_WCET);
+  XMLModel otawaCacheRes  with XMLModelSlot(metaModel=OTAWA_CACHE);
+
+  /* ---- Federation roles: the two cache individuals we synchronize ---- */
+  HeptaneCache  hCache with XMLIndividualRole(container=heptaneWCETRes, xsdType=HCACHE_TYPE);
+  OtawaICache   iCache with XMLIndividualRole(container=otawaCacheRes,  xsdType=ICACHE_TYPE);
+
+  /* ---------------------------------------------------------------------
+     Constructors / connectors
+     --------------------------------------------------------------------- */
+  create(Resource<XMLModel> heptaneRes, Resource<XMLModel> otawaRes) {
+    connect heptaneWCETRes using parameters.heptaneRes;
+    connect otawaCacheRes  using parameters.otawaRes;
+  }
+
+  /* =====================================================================
+     Federation concept: canonical cache properties + sync methods
+     ===================================================================== */
+  public concept Cache {
+
+    /* Heptane side (attributes on <CACHE .../>) */
+    Integer h_nbsets  {
+      Integer get() { return hCache.nbsets; 
+}
+      set(Integer value) { hCache.nbsets = v; }
+    };
+
+    Integer h_nbways  {
+      Integer get() { return hCache.nbways; 
+}
+      set(Integer value) { hCache.nbways = v; }
+    };
+
+    Integer h_cachelinesize  {
+      Integer get() { return hCache.cachelinesize; 
+}
+      set(Integer value) { hCache.cachelinesize = v; }
+    };
+
+    Integer h_latency  {
+      Integer get() { return hCache.latency; 
+}
+      set(Integer value) { hCache.latency = v; }
+    };
+
+    /* OTAWA side (attributes/fields on icache type) */
+    Integer o_block_bits  {
+      Integer get() { return iCache.blockBits; 
+}
+      set(Integer value) { iCache.blockBits = v; }
+    };
+
+    Integer o_way_bits  {
+      Integer get() { return iCache.wayBits; 
+}
+      set(Integer value) { iCache.wayBits = v; }
+    };
+
+    Integer o_row_bits  {
+      Integer get() { return iCache.rowBits; 
+}
+      set(Integer value) { iCache.rowBits = v; }
+    };
+
+    Integer o_miss_penalty  {
+      Integer get() { return iCache.missPenalty; 
+}
+      set(Integer value) { iCache.missPenalty = v; }
+    };
+
+    /* ------------------- Sync directions -------------------------------
+       Heptane -> OTAWA : map Heptane attributes to OTAWA icache fields
+       OTAWA   -> Heptane: inverse mapping
+       Optionally compute blockBits from cachelinesize using WcetMath.
+       ------------------------------------------------------------------ */
+
+    public syncHeptaneToOtawa() {
+      // If you want math: o_block_bits = WcetMath.blockBitsFromCacheLineSize(h_cachelinesize);
+      o_block_bits   = h_cachelinesize;  // direct mapping for now
+      o_way_bits     = h_nbways;
+      o_row_bits     = h_nbsets;
+      o_miss_penalty = h_latency;
+    }
+
+    public syncOtawaToHeptane() {
+      // If you want math: h_cachelinesize = WcetMath.cacheLineSizeFromBlockBits(o_block_bits);
+      h_cachelinesize = o_block_bits;   // direct mapping for now
+      h_nbways        = o_way_bits;
+      h_nbsets        = o_row_bits;
+      h_latency       = o_miss_penalty;
+    }
+
+    delete();
+  }
+
+  /* =====================================================================
+     View concept to expose user-editable fields (UI/API) with sync hooks
+     ===================================================================== */
+  public concept CacheView {
+
+    /* Attach to the federation concept living in this VM */
+    //Cache syncCache with ConceptInstance(virtualModelInstance=);
+
+    /* User-facing properties (you can rename these labels for your UI) */
+    Integer block_bits  {
+      Integer get() { return syncCache.h_cachelinesize; 
+}
+      set(Integer value) { syncCache.h_cachelinesize = v; }
+    };
+
+    Integer way_bits  {
+      Integer get() { return syncCache.h_nbways; 
+}
+      set(Integer value) { syncCache.h_nbways = v; }
+    };
+
+    Integer row_bits  {
+      Integer get() { return syncCache.h_nbsets; 
+}
+      set(Integer value) { syncCache.h_nbsets = v; }
+    };
+
+    Integer miss_penalty  {
+      Integer get() { return syncCache.h_latency; 
+}
+      set(Integer value) { syncCache.h_latency = v; }
+    };
+
+    /* Push user edits -> XMLs (Heptane then OTAWA) */
+    public syncToXml() {
+      // If using math helpers, you could compute here before pushing
+      syncCache.syncHeptaneToOtawa();
+    }
+
+    /* Pull from XMLs -> refresh the view fields */
+    public syncFromXml() {
+      syncCache.syncOtawaToHeptane();
+      this.block_bits   = syncCache.h_cachelinesize;
+      this.way_bits     = syncCache.h_nbways;
+      this.row_bits     = syncCache.h_nbsets;
+      this.miss_penalty = syncCache.h_latency;
+    }
+
+    delete();
+  }
+
+  /* =====================================================================
+     Minimal workflow helpers
+     ===================================================================== */
+
+  /* Create a view pre-wired to the current VM */
+  public CacheView createCacheView() {
+    CacheView v = new CacheView();
+    v.syncFromXml();
+    return v;
+  }
+
+  /* Convenience workflow steps (optional) */
+  public synchronizeHeptaneToOtawa() {
+    Cache c = new Cache();
+    c.syncHeptaneToOtawa();
+  }
+
+  public synchronizeOtawaToHeptane() {
+    Cache c = new Cache();
+    c.syncOtawaToHeptane();
+  }
+
+  /* Clean-up */
+  delete();
+}

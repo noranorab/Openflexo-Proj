@@ -28,15 +28,17 @@ public model WCETWorkflow {
    XMLModel otawaCacheRes with XMLModelSlot(metaModel=OTAWA_CACHE);
 
     // The federation (sync) model instance
-    WCETFederation federation with ModelInstance();
-    WCETConfiguration configuration with ModelInstance();
+    WCETFederation federation with ModelInstance(container=this);
+    WCETConfiguration configuration with ModelInstance(container=this);
 
     // Initialization/entry-point
     create(Resource<XMLModel> hRes, Resource<XMLModel> oRes) {
         connect heptaneWCETRes using parameters.hRes;
         connect otawaCacheRes using parameters.oRes;
+      
+      
         // Connect the federation and configuration models as needed
-      //federation.DefaultCreationScheme(heptaneWCETRes, otawaCacheRes);
+      
     
      // configuration.create(federation);
     }

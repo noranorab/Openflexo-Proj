@@ -121,7 +121,7 @@ public model WCETFederation {
    
    }
    public syncOtawaToHeptane() {   
- // iCache.blockBits = WcetMath.blockBitsFromCacheLineSize(hCache.cachelinesize);
+ //iCache.blockBits = WcetMath.blockBitsFromCacheLineSize(hCache.cachelinesize);
    h_cachelinesize = o_block_bits;
    h_nbways = o_way_bits;
     h_nbsets = o_row_bits;

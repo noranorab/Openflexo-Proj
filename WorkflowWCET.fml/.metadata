@@ -1,0 +1,7 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\WorkflowWCET.fml
+#Wed Aug 13 10:36:45 WEST 2025
+WorkflowWCET.fml.name=WorkflowWCET
+WorkflowWCET.fml.version=0.1
+WorkflowWCET.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/WorkflowWCET.fml
+WorkflowWCET.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot,org.openflexo.foundation.fml.rt.FMLRTModelSlot
+WorkflowWCET.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
