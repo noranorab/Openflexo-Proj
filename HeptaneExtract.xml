@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE XML>
 <CONFIGURATION xmlns="http://mem4csd.telecom-paris.fr/heptaneExtract">
 
 <TARGET NAME="MIPS" ENDIANNESS="BIG"/>

@@ -8,6 +8,7 @@ import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
 import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
 import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
 import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import java.lang.String;
 // import wcet.util.WcetMath;  // Uncomment if you actually use it
 
 /* === XSD meta-models (URIs or file-based) ================================ */
@@ -23,12 +24,18 @@ import XSDMetaModel OTAWA_CACHE    from ["http://mem4csd.telecom-paris.fr/OtawaC
 import XSDMetaModel HEPTANE_WCET   from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
 
 /* === XML complex types ==================================================== */
+//import XMLComplexType CACHE_CONFIG  from [OTAWA_CACHE:"dcache"];
 import XMLComplexType ICACHE_TYPE  from [OTAWA_CACHE:"icache"];
 import XMLComplexType HCACHE_TYPE  from [HEPTANE_WCET:"HeptaneCacheType"];
+import XMLComplexType CONFIGURATION_TYPE   from [HEPTANE_WCET:"CONFIGURATION"];
+import XMLComplexType ARCHITECTURE_TYPE   from [HEPTANE_WCET:"ARCHITECTURE"];
+//import XMLComplexType CACHE_CONFIG from [OTAWA_CACHE:"cache-config"];
 
 /* === FML typedefs to make roles strongly typed =========================== */
 typedef XMLIndividualType(xsdType=HCACHE_TYPE) as HeptaneCache;
+typedef XMLIndividualType(xsdType=CONFIGURATION_TYPE) as HeptaneConfiguration;
 typedef XMLIndividualType(xsdType=ICACHE_TYPE) as OtawaICache;
+typedef XMLIndividualType(xsdType=ARCHITECTURE_TYPE) as Architecture;
 
 /* =========================================================================
    All-in-one VM: resources, roles, sync logic, and a small workflow API
@@ -42,9 +49,10 @@ public model WorkflowWCET {
   XMLModel otawaCacheRes  with XMLModelSlot(metaModel=OTAWA_CACHE);
 
   /* ---- Federation roles: the two cache individuals we synchronize ---- */
-  HeptaneCache  hCache with XMLIndividualRole(container=heptaneWCETRes, xsdType=HCACHE_TYPE);
+  HeptaneCache  hCache with XMLIndividualRole(container=heptaneWCETRes,xsdType=HCACHE_TYPE, xsdType=HCACHE_TYPE);
   OtawaICache   iCache with XMLIndividualRole(container=otawaCacheRes,  xsdType=ICACHE_TYPE);
-
+  HeptaneConfiguration  configuration with XMLIndividualRole(container=heptaneWCETRes, xsdType=CONFIGURATION_TYPE );
+    
   /* ---------------------------------------------------------------------
      Constructors / connectors
      --------------------------------------------------------------------- */
@@ -54,6 +62,15 @@ public model WorkflowWCET {
   create(Resource<XMLModel> heptaneRes, Resource<XMLModel> otawaRes) {
     connect heptaneWCETRes using parameters.heptaneRes;
     connect otawaCacheRes  using parameters.otawaRes;
+    //XMLIndividual arch = configuration.getPropertyValue("ARCHITECTURE");
+    
+    //iCache = (OtawaICache)otawaCacheRes.root.getPropertyValue("icache");
+   configuration =(HeptaneConfiguration)heptaneWCETRes.root;
+   //hCache = configuration.architecture.caches;
+//log "architecture: " + ARCHITECTURE;
+    for (HeptaneCache cache : configuration.architecture.caches) {
+     hCache =cache;
+}
   }
 
 	
@@ -136,7 +153,33 @@ public model WorkflowWCET {
       h_nbsets        = o_row_bits;
       h_latency       = o_miss_penalty;
     }
+      public setHeptaneField(String field, int value) {
+  if (parameters.field == "nbsets")        { h_nbsets = parameters.value;
+                                             log "h_nbsets: " + parameters.value;
+                                             return; 
+}
+  if (parameters.field == "nbways")        { h_nbways = parameters.value;        return; 
+}
+  if (parameters.field == "cachelinesize") { h_cachelinesize = parameters.value; return; 
+}
+  if (parameters.field == "latency")       { h_latency = parameters.value;       return; 
+}
+  // (optionnel) lever une erreur si champ inconnu
+}
 
+/* Définir/modifier un champ côté OTAWA */
+public setOtawaField(String field, int value) {
+  if (parameters.field == "block_bits")   { o_block_bits = parameters.value;   return; 
+}
+  if (parameters.field == "way_bits")     { o_way_bits = parameters.value;     return; 
+}
+  if (parameters.field == "row_bits")     { o_row_bits = parameters.value;     return; 
+}
+  if (parameters.field == "miss_penalty") { o_miss_penalty = parameters.value; return; 
+}
+  // (optionnel) lever une erreur si champ inconnu
+}
+   
     delete();
   
   }
@@ -222,7 +265,19 @@ public model WorkflowWCET {
     
     cache.syncOtawaToHeptane();
   }
+   public modifyCache(String side, String field, int value, boolean propagate) {
+  if (parameters.side == "heptane") {
+    cache.setHeptaneField(parameters.field,parameters.value);
+    if (parameters.propagate) { cache.syncHeptaneToOtawa(); 
+}
+  }
+  else { // assume "otawa"
+    cache.setOtawaField(parameters.field,parameters.value);
+    if (parameters.propagate) { cache.syncOtawaToHeptane(); 
+}
+  }
 
+}
   /* Clean-up */
   
   delete();

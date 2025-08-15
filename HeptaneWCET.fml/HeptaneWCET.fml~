@@ -17,19 +17,19 @@ typedef XMLIndividualType(xsdType=H_CACHE)         as HeptaneCache;
 public model HeptaneWCET {
 	XMLModel heptaneWCET with XMLModelSlot(metaModel=HEPTANE_WCET);
 
-   HeptaneCache[0,*]    caches        with XMLIndividualRole(container=heptaneWCET, xsdType=H_CACHE);
+   XMLIndividual[0,*]    caches        with XMLIndividualRole(container=heptaneWCET, xsdType=null);
 
     create(Resource<XMLModel> heptaneWCETRes) {
       connect heptaneWCET using parameters.heptaneWCETRes;
 
       caches        = select HeptaneCache            from heptaneWCET;
 
-      for (HeptaneCache i : caches) {
+      for (XMLIndividual i : caches) {
       log "XMLIndividual in caches: " + i;
     }
     }
     public listAllXMLIndividualsInCaches() {
-    for (HeptaneCache i : caches) {
+    for (XMLIndividual i : caches) {
       log "XMLIndividual in caches: " + i;
     }
   }

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<FMLRTVirtualModelInstance id="0" virtualModelURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Ota.fml" modelVersion="1.0" title="TestOta6" version="0.1" flexoConceptURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Ota.fml" userID="PC" flexoID="1">
-  <TypeAwareModelSlotInstance id="1" modelURI="file:/C:/Users/PC/Desktop/project/CaoticWorkflow/otawa_caches.xml" modelSlotName="otawa_cache" roleName="otawa_cache" userID="PC" flexoID="2" />
-  <TypeAwareModelSlotInstance id="2" modelURI="file:/C:/Users/PC/Desktop/project/CaoticWorkflow/otawa_memory.xml" modelSlotName="otawa_memory" roleName="otawa_memory" userID="PC" flexoID="3" />
-  <TypeAwareModelSlotInstance id="3" modelURI="file:/C:/Users/PC/Desktop/project/CaoticWorkflow/otawa_pipeline.xml" modelSlotName="otawa_pipeline" roleName="otawa_pipeline" userID="PC" flexoID="4" />
-</FMLRTVirtualModelInstance>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://mem4csd.telecom-paris.fr/HeptaneWCET" targetNamespace="http://mem4csd.telecom-paris.fr/HeptaneWCET">
+           elementFormDefault="qualified" 
+		   xmlns="http://mem4csd.telecom-paris.fr/HeptaneWCET" 
+		   targetNamespace="http://mem4csd.telecom-paris.fr/HeptaneWCET">
   <xs:complexType name="HeptaneCacheType">
     <xs:simpleContent>
       <xs:extension base="xs:string">
@@ -208,7 +210,7 @@
             <xs:documentation> Target type </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element ref="CACHE" maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="CACHE" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation> Cache  NB: cache look-up is always considered when calculating the WCET,  111 for a all-miss for a 2-level cache hierarchy  Set type="picache" for a perfect instruction cache, and type="pdcache" for a perfect data cache.
      In this cases, nbsets, nbways, cachelinesize and replacement policy are irrelevant.  </xs:documentation>
@@ -226,7 +228,7 @@
             <xs:documentation> Build the cfg of the input_file, compute the contexts and set the entry point to be analyzed </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element ref="ICACHE" maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="ICACHE" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation> Instruction cache analysis: each of the 3 analysis steps (must/may/persistence) can be turned on/off individually </xs:documentation>
           </xs:annotation>
@@ -236,7 +238,7 @@
             <xs:documentation> To use data cache analysis, you have to first call analysis DATAADDRESS to attach addresses  to load/store instructions. This requires that the CFG is extracted with OUTPUTOBJDUMP and OUTPUTREADELF set to true  Data cache analysis has to be called for each cache level individually </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element ref="DCACHE" maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="DCACHE" maxOccurs="1" minOccurs="0">
           <xs:annotation>
             <xs:documentation> Data cache analysis: each of the 3 analysis steps (must/may/persistence) can be turned on/off individually </xs:documentation>
           </xs:annotation>
@@ -281,25 +283,15 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="CONFIGURATION">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="INPUTOUTPUTDIR">
-          <xs:annotation>
-            <xs:documentation> *******************************************************  Places to be modified to adap the template to your need  Mandatory:     Inputputdir: directory in which all files will be read/written     input file name for the first analysis (here icache analysis): name of thexml file containing the program to be analyzed     If data address analysis is applied, name of the benchmark     If codeline analysis is applied, name of the program binary file     If htmlprint is applied, absolute name of the html file   Optional:     Architecture description     List of analyses to be applied and corresponding parameters  *******************************************************  Where to find the program to analyze and to put analysis results </xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element ref="ARCHITECTURE">
-          <xs:annotation>
-            <xs:documentation> Architecture description </xs:documentation>
-          </xs:annotation>
-		  
-        </xs:element>
-        <xs:element ref="ANALYSIS">
-          <xs:annotation>
-            <xs:documentation> List of analysis steps, to be applied sequentially  output file allows to keep the results of on analysis in a file for debug purposes </xs:documentation>
-          </xs:annotation>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
+   <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="INPUTOUTPUTDIR"/>
+      <xs:element ref="ARCHITECTURE"/>
+      <xs:element ref="ANALYSIS"/>
+    </xs:sequence>
+	<xs:attribute type="xs:string" name="class"/>
+   </xs:complexType>
   </xs:element>
+
+
 </xs:schema>

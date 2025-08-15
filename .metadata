@@ -1,5 +1,5 @@
 #Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A
-#Tue Aug 12 14:09:12 WEST 2025
+#Wed Aug 13 11:26:07 WEST 2025
 HeptaneWCET.xsd.IS_XML=true
 WCETFederation.txt.IS_XML=false
 library.xsd.IS_XML=true
@@ -10,17 +10,19 @@ OtawaMemory.xsd.IS_XML=true
 otawa_memory.xml.XSD_SCHEMA_URI=none
 HeptaneExtract.xsd.IS_XML=true
 HeptaneExtract.xml.XSD_SCHEMA_URI=http\://mem4csd.telecom-paris.fr/heptaneExtract
+heptane_wcet.xml.XSD_SCHEMA_URI=http\://mem4csd.telecom-paris.fr/HeptaneWCET
 OtawaCache.xsd.IS_XML=true
 HeptaneExtract.xml.IS_XML=true
-otawa_caches.xml.XSD_SCHEMA_URI=none
+otawa_caches.xml.XSD_SCHEMA_URI=http\://mem4csd.telecom-paris.fr/OtawaCache
+9\ \ coordonn\u00E9es\ en\ cas\ d'urgence.pdf.IS_XML=false
 5\ D\u00E9claration\ respect\ -\ Charte\ info.pdf.IS_XML=false
 configExtractSchema.xsd.IS_XML=true
 6\ Droit\ \u00E0\ l'image.pdf.IS_XML=false
-9\ \ coordonn\u00E9es\ en\ cas\ d'urgence.pdf.IS_XML=false
 otawa_memory.xml.IS_XML=true
 otawa_caches.xml.IS_XML=true
 configExtract_MIPS.xml.template.IS_XML=false
 otawa_pipeline.xml.XSD_SCHEMA_URI=none
 configWCET_MIPS.xml.template.IS_XML=false
+heptane_wcet.xml.IS_XML=true
 OtawaPipeline.xsd.IS_XML=true
 otawa_pipeline.xml.IS_XML=true

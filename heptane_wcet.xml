@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIGURATION
+  xmlns="http://mem4csd.telecom-paris.fr/HeptaneWCET"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://mem4csd.telecom-paris.fr/HeptaneWCET HeptaneWCET.xsd">
+
+  <INPUTOUTPUTDIR name="." />
+
+  <ARCHITECTURE>
+    <TARGET NAME="MIPS" ENDIANNESS="BIG" DATAPATH="32" />
+    <CACHE nbsets="64" nbways="4" cachelinesize="32"
+           replacement_policy="LRU" type="icache" level="1" latency="1" />
+    <MEMORY load_latency="50" store_latency="50" />
+  </ARCHITECTURE>
+
+  <ANALYSIS>
+    <ENTRYPOINT keepresults="yes" input_file="cfg.xml"
+                output_file="entrypoint.out" entrypointname="main" />
+    <ICACHE keepresults="yes" input_file="cfg.xml"
+            output_file="icache_L1.out" level="1" must="on" may="on"
+            persistence="off" />
+    <DATAADDRESS keepresults="yes" input_file="icache_L1.out"
+                 output_file="dataaddr.out" sp="0x7ffff000" />
+    <DCACHE keepresults="yes" input_file="dataaddr.out"
+            output_file="dcache_L1.out" level="1" must="on" may="on"
+            persistence="off" />
+    <PIPELINE keepresults="yes" input_file="dcache_L1.out"
+              output_file="pipeline.out" />
+    <IPET keepresults="yes" input_file="pipeline.out"
+          output_file="wcet.out" solver="lp_solve" pipeline="pipeline.out"
+          attach_WCET_info="true" generate_node_freq="true" />
+    <SESEANALYSIS keepresults="no" input_file="pipeline.out"
+                  output_file="sese.out" />
+    <CACHESTATISTICS keepresults="yes"
+                     input_file="wcet.out" output_file="cachestats.out" />
+    <SIMPLEPRINT keepresults="no" input_file="cfg.xml"
+                 output_file="cfg.txt" printcallgraph="true" printloopnest="true"
+                 printcfg="true" printWCETinfo="true" />
+    <DOTPRINT keepresults="no" input_file="cfg.xml"
+              output_file="cfg.dot" detailed_BB="false" />
+    <CODELINE keepresults="no" input_file="wcet.out"
+              output_file="codeline.out" binaryfile="a.out"
+              addr2lineCommand="mips-addr2line" />
+    <HTMLPRINT keepresults="no" input_file="codeline.out"
+               output_file="codeline.html" colorize="true"
+               html_file="/abs/path/to/report.html" />
+  </ANALYSIS>
+</CONFIGURATION>

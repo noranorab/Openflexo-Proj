@@ -1,0 +1,6 @@
+createCacheView=CreateCacheView
+heptaneRes=HeptaneRes
+modifyCache=ModifyCache
+otawaRes=OtawaRes
+synchronizeHeptaneToOtawa=SynchronizeHeptaneToOtawa
+synchronizeOtawaToHeptane=SynchronizeOtawaToHeptane
