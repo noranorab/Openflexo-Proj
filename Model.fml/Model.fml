@@ -1,0 +1,35 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import java.lang.String;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model.fml")
+model Model {
+	XMLModel heptaneSlot with XMLModelSlot(metaModel=HEPTANE_WCET);
+
+	void addCache(required byte param1, required byte param2, required byte param3, required byte param4, required byte param5, required byte param6, required byte param7) {
+		FMLRT::AddFlexoConceptInstance() in this;
+	}
+
+	sync() with  {
+		select null from heptaneSlot;
+	}
+
+	public concept CacheTest {
+		XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) property1 with XMLIndividualRole(container=this,xsdType=HEPTANE_CACHE_TYPE);
+		create::_create(XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) aXMLIndividual) {
+			property1 = parameters.aXMLIndividual;
+		}
+		delete() {
+		}
+		create::addCache(byte aParam1, byte aParam2, byte aParam3, byte aParam4, byte aParam5, byte aParam6, byte aParam7) {
+		}
+	}
+}

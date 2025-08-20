@@ -1,0 +1,7 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\Model1.fml
+#Wed Aug 20 17:26:34 WEST 2025
+Model1.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot,org.openflexo.foundation.fml.rt.FMLRTModelSlot
+Model1.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
+Model1.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/Model1.fml
+Model1.fml.version=0.1
+Model1.fml.name=Model1

@@ -3,7 +3,6 @@
   xmlns="http://mem4csd.telecom-paris.fr/HeptaneWCET"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://mem4csd.telecom-paris.fr/HeptaneWCET HeptaneWCET.xsd">
-
   <INPUTOUTPUTDIR name="." />
 
   <ARCHITECTURE>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<FMLRTVirtualModelInstance id="0" virtualModelURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WorkflowWCET.fml" modelVersion="1.0" title="test9" version="0.1" flexoConceptURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/WorkflowWCET.fml" userID="PC" flexoID="1">
-  <TypeAwareModelSlotInstance id="1" modelURI="file:/C:/Users/PC/Desktop/project/CaoticWorkflow/heptane_wcet.xml" modelSlotName="heptaneWCETRes" roleName="heptaneWCETRes" userID="PC" flexoID="2" />
-  <TypeAwareModelSlotInstance id="2" modelSlotName="otawaCacheRes" roleName="otawaCacheRes" userID="PC" flexoID="3" />
-  <XMLActorReference id="3" roleName="configuration" userID="PC" flexoID="4" />
-</FMLRTVirtualModelInstance>

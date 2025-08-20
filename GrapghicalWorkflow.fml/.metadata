@@ -1,0 +1,9 @@
+#Metadata for directory C:\Users\PC\Desktop\TelecomParis\internship 2A\GrapghicalWorkflow.fml
+#Tue Aug 19 20:53:31 WEST 2025
+GrapghicalWorkflow.fml.IS_XML=false
+GrapghicalWorkflow.fml.virtualModelClassName=org.openflexo.foundation.fml.VirtualModel
+GrapghicalWorkflow.fml.uri=file\:/C\:/Users/PC/Desktop/TelecomParis/internship%202A/GrapghicalWorkflow.fml
+GrapghicalWorkflow.fml.name=GrapghicalWorkflow
+temp6784512164808675053.txt.IS_XML=false
+GrapghicalWorkflow.fml.version=0.1
+GrapghicalWorkflow.fml.requiredModelSlotList=org.openflexo.technologyadapter.xml.XMLModelSlot,org.openflexo.foundation.fml.rt.FMLRTModelSlot

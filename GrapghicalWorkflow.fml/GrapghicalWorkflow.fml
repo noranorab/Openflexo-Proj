@@ -1,0 +1,91 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+
+/* Heptane WCET XSD */
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+
+/* Named complex type for <CACHE .../> */
+import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
+
+/* Strong FML type alias */
+typedef XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) as HeptaneCache;
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/GraphicalCacheOnly.fml")
+@Author("PC")
+public model GraphicalCacheOnly {
+
+  /* Bind to the Heptane XML instance */
+  XMLModel heptaneSlot with XMLModelSlot(metaModel=HEPTANE_WCET);
+
+  /* =====================================
+     Concept bound to a <CACHE …/> element
+     ===================================== */
+  public concept Cache {
+
+    HeptaneCache hCache with XMLIndividualRole(container=heptaneSlot, xsdType=HEPTANE_CACHE_TYPE);
+
+    /* --- Constructor: bind to an existing <CACHE …/> node --- */
+    create::createFromExisting(HeptaneCache existing) {
+      hCache = parameters.existing;
+    }
+
+    /* ---- Properties with UI widgets ---- */
+
+    @UI(@IntegerWidget(value="nbsets"))
+    Integer nbsets  { Integer get() { return hCache.nbsets; }  set(Integer v) { hCache.nbsets = v; } };
+
+    @UI(@IntegerWidget(value="nbways"))
+    Integer nbways  { Integer get() { return hCache.nbways; }  set(Integer v) { hCache.nbways = v; } };
+
+    @UI(@IntegerWidget(value="cachelinesize"))
+    Integer cachelinesize { Integer get() { return hCache.cachelinesize; } set(Integer v) { hCache.cachelinesize = v; } };
+
+    @UI(@TextFieldWidget(value="replacement_policy"))
+    String  replacement_policy { String get() { return hCache.replacement_policy; } set(String v) { hCache.replacement_policy = v; } };
+
+    @UI(@TextFieldWidget(value="type"))
+    String  type    { String get() { return hCache.type; } set(String v) { hCache.type = v; } };
+
+    @UI(@IntegerWidget(value="level"))
+    Integer level   { Integer get() { return hCache.level; } set(Integer v) { hCache.level = v; } };
+
+    @UI(@IntegerWidget(value="latency"))
+    Integer latency { Integer get() { return hCache.latency; } set(Integer v) { hCache.latency = v; } };
+
+    /* --- Optional: a small “edit form” action with widgets --- */
+    @UI(
+      @IntegerWidget(value="nbsets_param")
+      @IntegerWidget(value="nbways_param")
+      @IntegerWidget(value="cachelinesize_param")
+      @TextFieldWidget(value="replacement_policy_param")
+      @TextFieldWidget(value="type_param")
+      @IntegerWidget(value="level_param")
+      @IntegerWidget(value="latency_param")
+    )
+    public editCache(Integer nbsets_param, Integer nbways_param, Integer cachelinesize_param,
+                     String replacement_policy_param, String type_param,
+                     Integer level_param, Integer latency_param) {
+      if (parameters.nbsets_param         != null) { nbsets            = parameters.nbsets_param; }
+      if (parameters.nbways_param         != null) { nbways            = parameters.nbways_param; }
+      if (parameters.cachelinesize_param  != null) { cachelinesize     = parameters.cachelinesize_param; }
+      if (parameters.replacement_policy_param != null) { replacement_policy = parameters.replacement_policy_param; }
+      if (parameters.type_param           != null) { type              = parameters.type_param; }
+      if (parameters.level_param          != null) { level             = parameters.level_param; }
+      if (parameters.latency_param        != null) { latency           = parameters.latency_param; }
+    }
+
+    delete();
+  }
+
+  /* ==========================================
+     Synchronize: one Cache per <CACHE …/> node
+     ========================================== */
+  sync(HeptaneCache c) with {
+    select HeptaneCache from heptaneSlot;
+    match Cache from create::createFromExisting(parameters.existing = select);
+  }
+}

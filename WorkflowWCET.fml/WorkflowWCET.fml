@@ -15,25 +15,26 @@ import java.lang.String;
 /* OTAWA Cache XSD (icache / dcache). If you prefer local file, you can use:
    import XSDMetaModel OTAWA_CACHE from [_ + "xmlFiles/OtawaCache.xsd"];
 */
-import XSDMetaModel OTAWA_CACHE    from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
 
 /* Heptane WCET XSD (CACHE element has named type HeptaneCacheType).
    If you prefer local file, use:
    import XSDMetaModel HEPTANE_WCET from [_ + "xmlFiles/HeptaneWCET.xsd"];
 */
-import XSDMetaModel HEPTANE_WCET   from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
-
+import XSDMetaModel HEPTANE_CACHE   from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+import XSDMetaModel OTAWA_CACHE    from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
 /* === XML complex types ==================================================== */
 //import XMLComplexType CACHE_CONFIG  from [OTAWA_CACHE:"dcache"];
+
 import XMLComplexType ICACHE_TYPE  from [OTAWA_CACHE:"icache"];
 import XMLComplexType HCACHE_TYPE  from [HEPTANE_WCET:"HeptaneCacheType"];
 import XMLComplexType CONFIGURATION_TYPE   from [HEPTANE_WCET:"CONFIGURATION"];
 import XMLComplexType ARCHITECTURE_TYPE   from [HEPTANE_WCET:"ARCHITECTURE"];
-//import XMLComplexType CACHE_CONFIG from [OTAWA_CACHE:"cache-config"];
+import [_ + "HeptaneTool.fml"];
+//import XMLComplexType CONFIG_TYPE from [OTAWA_CACHE:"CacheConfigType"];
 
 /* === FML typedefs to make roles strongly typed =========================== */
-typedef XMLIndividualType(xsdType=HCACHE_TYPE) as HeptaneCache;
-typedef XMLIndividualType(xsdType=CONFIGURATION_TYPE) as HeptaneConfiguration;
+typedef XMLIndividualType(xsdType=ARCHITECTURE_TYPE) as HeptaneCache;
+typedef XMLIndividualType(xsdType=ARCHITECTURE_TYPE) as HeptaneConfiguration;
 typedef XMLIndividualType(xsdType=ICACHE_TYPE) as OtawaICache;
 typedef XMLIndividualType(xsdType=ARCHITECTURE_TYPE) as Architecture;
 
@@ -45,13 +46,12 @@ typedef XMLIndividualType(xsdType=ARCHITECTURE_TYPE) as Architecture;
 public model WorkflowWCET {
 
   /* ---- Bind the two XML instance resources (the actual XML files) ---- */
-  XMLModel heptaneWCETRes with XMLModelSlot(metaModel=HEPTANE_WCET);
-  XMLModel otawaCacheRes  with XMLModelSlot(metaModel=OTAWA_CACHE);
-
+    XMLModel otawaCacheRes  with XMLModelSlot(metaModel=OTAWA_CACHE);
+   XMLModel heptaneWCETRes with XMLModelSlot(metaModel=HEPTANE_CACHE);
   /* ---- Federation roles: the two cache individuals we synchronize ---- */
-  HeptaneCache  hCache with XMLIndividualRole(container=heptaneWCETRes,xsdType=HCACHE_TYPE, xsdType=HCACHE_TYPE);
+  XMLIndividual  hCache with XMLIndividualRole(container=heptaneWCETRes,xsdType=null);
   OtawaICache   iCache with XMLIndividualRole(container=otawaCacheRes,  xsdType=ICACHE_TYPE);
-  HeptaneConfiguration  configuration with XMLIndividualRole(container=heptaneWCETRes, xsdType=CONFIGURATION_TYPE );
+  XMLIndividual  configuration with XMLIndividualRole(container=heptaneWCETRes, xsdType=null );
     
   /* ---------------------------------------------------------------------
      Constructors / connectors
@@ -63,14 +63,16 @@ public model WorkflowWCET {
     connect heptaneWCETRes using parameters.heptaneRes;
     connect otawaCacheRes  using parameters.otawaRes;
     //XMLIndividual arch = configuration.getPropertyValue("ARCHITECTURE");
-    
-    //iCache = (OtawaICache)otawaCacheRes.root.getPropertyValue("icache");
+    //iCache = (OtawaICache)otawaCacheRes.root.icache;
+   // XMLIndividual config = otawaCacheRes.getIndividualWithUUID("otawa::hard::Cache");
+   
    configuration =(HeptaneConfiguration)heptaneWCETRes.root;
    //hCache = configuration.architecture.caches;
 //log "architecture: " + ARCHITECTURE;
-    for (HeptaneCache cache : configuration.architecture.caches) {
+    for (Object cache : configuration.architecture.caches) {
      hCache =cache;
 }
+
   }
 
 	

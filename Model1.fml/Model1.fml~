@@ -1,0 +1,167 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+use org.openflexo.foundation.fml.rt.FMLRTModelSlot as FMLRT;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import java.lang.String;
+
+/* ===== Heptane XSD ===== */
+import XSDMetaModel HEPTANE_WCET                 from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+import XMLComplexType HEPTANE_CACHE_TYPE         from [HEPTANE_WCET:"HeptaneCacheType"];
+import XMLComplexType HEPTANE_CONFIGURATION_TYPE from [HEPTANE_WCET:"CONFIGURATION"];
+import XMLComplexType HEPTANE_ARCHITECTURE_TYPE  from [HEPTANE_WCET:"ARCHITECTURE"];
+
+/* ===== Typedefs forts pour les rôles ===== */
+typedef XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE)         as HeptaneCache;
+typedef XMLIndividualType(xsdType=HEPTANE_CONFIGURATION_TYPE) as HeptaneConfiguration;
+typedef XMLIndividualType(xsdType=HEPTANE_ARCHITECTURE_TYPE)  as HeptaneArchitecture;
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model1.fml")
+model Model1 {
+
+  /* --- Le “document XML” (équivalent du workbook Excel) --- */
+  XMLModel heptaneSlot with XMLModelSlot(metaModel=HEPTANE_WCET);
+
+  /* --- Rôles d’ancrage dans l’arbre XML --- */
+  HeptaneConfiguration configuration with XMLIndividualRole(container=heptaneSlot, xsdType=HEPTANE_CONFIGURATION_TYPE);
+  HeptaneArchitecture  architecture  with XMLIndividualRole(container=heptaneSlot, xsdType=HEPTANE_ARCHITECTURE_TYPE);
+
+	void addCache(required int nbsets, required int nbways, required int cachelinesize, required String replacement_policy, required String type, required int level, required int latency) {
+		FMLRT::AddFlexoConceptInstance() in this;
+	}
+
+  /* --- Accès racine (optionnel) --- */
+  
+  /* =====================================================================
+     CONCEPT: un <CACHE .../> Heptane (équivalent d’une “row” Excel)
+     ===================================================================== */
+  public concept CacheTest {
+
+    /* L’élément XML fédéré */
+    HeptaneCache cacheElem with XMLIndividualRole(container=heptaneSlot, xsdType=HEPTANE_CACHE_TYPE);
+
+    /* Propriétés “métier” mappées sur les attributs du <CACHE/> */
+    Integer nbsets  {
+      Integer get() { return cacheElem.nbsets; 
+}
+      set(Integer value) { cacheElem.nbsets = value; }
+    };
+    Integer nbways  {
+      Integer get() { return cacheElem.nbways; 
+}
+      set(Integer value) { cacheElem.nbways = value; }
+    };
+    Integer cachelinesize  {
+      Integer get() { return cacheElem.cachelinesize; 
+}
+      set(Integer value) { cacheElem.cachelinesize = value; }
+    };
+    String replacement_policy  {
+      String get() { return cacheElem.replacement_policy; 
+}
+      set(String value) { cacheElem.replacement_policy = value; }
+    };
+    String type  {
+      String get() { return cacheElem.type; 
+}
+      set(String value) { cacheElem.type = value; }
+    };
+    Integer level  {
+      Integer get() { return cacheElem.level; 
+}
+      set(Integer value) { cacheElem.level = value; }
+    };
+    Integer latency  {
+      Integer get() { return cacheElem.latency; 
+}
+      set(Integer value) { cacheElem.latency = value; }
+    };
+
+    /* ---- Création depuis un élément EXISTANT (<CACHE/> déjà présent) --- */
+    /*
+    create::_create(XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) existing) {
+      cacheElem = parameters.existing;
+    }
+*/
+    /* ---- Création d’un NOUVEAU <CACHE/> sous <ARCHITECTURE> ------------ */
+    @UI(
+      @IntegerWidget(value="nbsets_param")
+      @IntegerWidget(value="nbways_param")
+      @IntegerWidget(value="cachelinesize_param")
+      @TextFieldWidget(value="replacement_policy_param")
+      @TextFieldWidget(value="type_param")
+      @IntegerWidget(value="level_param")
+      @IntegerWidget(value="latency_param")
+    )
+    create::addCache(
+      required int nbsets_param,
+      required int nbways_param,
+      required int cachelinesize_param,
+      String  replacement_policy_param,
+      String  type_param,
+      int level_param,
+      int latency_param
+    ) {
+      /* crée l’élément enfant <CACHE/> */
+      //cacheElem = AddXMLIndividual(parent=architecture, elementName="CACHE", xsdType=HEPTANE_CACHE_TYPE);
+
+      /* initialise les attributs */
+      nbsets             = parameters.nbsets_param;
+      nbways             = parameters.nbways_param;
+      cachelinesize      = parameters.cachelinesize_param;
+      replacement_policy = parameters.replacement_policy_param;
+      type               = parameters.type_param;
+      level              = parameters.level_param;
+      latency            = parameters.latency_param;
+    }
+
+    delete() { /* (optionnel) suppression fédérée */ 
+}
+  }
+
+  /* =====================================================================
+     ACTION VM: créer un nouveau cache (UI au niveau du VM)
+     ===================================================================== */
+  
+  @UI(
+    @IntegerWidget(value="nbsets")
+    @IntegerWidget(value="nbways")
+    @IntegerWidget(value="cachelinesize")
+    @TextFieldWidget(value="replacement_policy")
+    @TextFieldWidget(value="type")
+    @IntegerWidget(value="level")
+    @IntegerWidget(value="latency")
+  )
+  
+  void addCache(
+    required int nbsets,
+    required int nbways,
+    required int cachelinesize,
+    String  replacement_policy,
+    String  type,
+    int level,
+    int latency
+  ) {
+    
+  }
+
+  /* =====================================================================
+     SYNC: document XML ? instances du concept (comme le Sync Scheme Excel)
+     ===================================================================== */
+  /*
+  void synchronizeFromXML() {
+    for (HeptaneCache c : select HeptaneCache from heptaneSlot) {
+      MatchFlexoConceptInstance(
+        virtualModelInstance=this,
+        concept=CacheTest,
+        creationScheme=CacheTest.Creation,
+        /* clé d’unicité = l’objet XML fédéré */
+       // matchingCriteria={ cacheElem = c },
+        //parameters={ existing = c }
+      //);
+    //}
+  //}
+  
+}
