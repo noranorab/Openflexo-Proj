@@ -1,0 +1,43 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import java.lang.String;
+
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+import XSDMetaModel OTAWA_MEMORY from ["http://mem4csd.telecom-paris.fr/OtawaMemory"];
+
+@URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model4.fml")
+model Model4 {
+	XMLModel heptaneSLot with XMLModelSlot(metaModel=HEPTANE_WCET);
+	XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) hCache with XMLIndividualRole(container=this,xsdType=HEPTANE_CACHE_TYPE);
+	XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) hcacheProperty  {
+		XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) get() {
+			return hCache;
+		}
+		set(XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) value) {
+			hCache = value;
+		}
+	};
+	XMLModel otawaSlotCache with XMLModelSlot(metaModel=OTAWA_CACHE);
+	XMLIndividual cacheconfig with XMLIndividualRole(container=this);
+	XMLModel otawaSlotMemory with XMLModelSlot(metaModel=OTAWA_MEMORY);
+
+	synchronizationScheme() with  {
+	}
+
+	public concept Cache {
+		XMLIndividual h_cache with XMLIndividualRole(container=this);
+		create::_create(XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) hcache_param) {
+			h_cache = parameters.hcache_param;
+		}
+		delete() {
+		}
+		create::add(required int nbsets, required int nbways, required int cachelinesize, required String type, required String replacement_policy, required String level, required String latency) {
+		}
+	}
+}
