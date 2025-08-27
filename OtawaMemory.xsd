@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema elementFormDefault="qualified" xlmns="http://mem4csd.telecom-paris.fr/OtawaMemory" targetNamespace="http://mem4csd.telecom-paris.fr/OtawaMemory" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://mem4csd.telecom-paris.fr/OtawaMemory" 
+		xmlns="http://mem4csd.telecom-paris.fr/OtawaMemory"
+		elementFormDefault="qualified">
   <xs:element name="offset" type="xs:string"/>
   <xs:element name="name" type="xs:string"/>
   <xs:element name="address">
@@ -12,8 +16,8 @@
   <xs:element name="size" type="xs:string"/>
   <xs:element name="type" type="xs:string"/>
   <xs:element name="latency" type="xs:byte"/>
-  <xs:element name="writable" type="xs:string"/>
-  <xs:element name="cachable" type="xs:string"/>
+  <xs:element name="writable" type="xs:boolean"/>
+  <xs:element name="cachable" type="xs:boolean"/>
   <xs:element name="bank">
     <xs:complexType>
       <xs:sequence>
@@ -30,7 +34,7 @@
   <xs:element name="banks">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="bank"/>
+        <xs:element ref="bank" maxOccurs="unbounded" minOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
