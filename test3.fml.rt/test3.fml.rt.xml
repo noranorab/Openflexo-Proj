@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FMLRTVirtualModelInstance id="0" virtualModelURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model4.fml" modelVersion="1.0" title="test3" version="0.1" flexoConceptURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model4.fml" userID="PC" flexoID="1">
+  <TypeAwareModelSlotInstance id="1" modelURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/heptane_wcet.xml" modelSlotName="heptane" roleName="heptane" userID="PC" flexoID="2" />
+  <TypeAwareModelSlotInstance id="2" modelURI="file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/otawa_cache.xml" modelSlotName="otawa" roleName="otawa" userID="PC" flexoID="3" />
+</FMLRTVirtualModelInstance>

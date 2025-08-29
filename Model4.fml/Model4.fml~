@@ -1,3 +1,94 @@
+use org.openflexo.technologyadapter.xml.XMLModelSlot as XML;
+
+import org.openflexo.technologyadapter.xml.model.typed.XMLModel;
+import org.openflexo.technologyadapter.xml.metamodel.XSDMetaModel;
+import org.openflexo.technologyadapter.xml.model.typed.XMLIndividual;
+import org.openflexo.technologyadapter.xml.metamodel.XMLComplexType;
+import java.lang.String;
+
+// XSD files import
+import XSDMetaModel HEPTANE_WCET from ["http://mem4csd.telecom-paris.fr/HeptaneWCET"];
+import XSDMetaModel OTAWA_CACHE from ["http://mem4csd.telecom-paris.fr/OtawaCache"];
+import XSDMetaModel OTAWA_MEMORY from ["http://mem4csd.telecom-paris.fr/OtawaMemory"];
+
+// The complex types found in XSD files
+import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
+import XMLComplexType DCACHE_TYPE from [OTAWA_CACHE:"dcache"];
+
+// Types beeing made available at FML level, built using XSD types found in XSD files
+typedef XMLIndividualType(xsdType=DCACHE_TYPE) as HCache;
+typedef XMLIndividualType(xsdType=DCACHE_TYPE) as DCache;
+
+/**
+ * This virtual model defines the federation of two XML files :
+ * - heptane XML file
+ * - Otawa cache file
+ */
 @URI("file:/C:/Users/PC/Desktop/TelecomParis/internship%202A/Model4.fml")
 model Model4 {
+   // The two model slots defining links to XML files
+   XMLModel heptane with XMLModelSlot(metaModel=HEPTANE_WCET);
+   XMLModel otawa with XMLModelSlot(metaModel=OTAWA_CACHE);
+
+   // A basic constructor based on the explicit given of the two resources
+   create(Resource<XMLModel> heptaneResource, Resource<XMLModel> otawaResource) {
+      connect heptane using parameters.heptaneResource;
+      connect otawa using  parameters.otawaResource;
+      // Call the synchronization at the end of constructor, to initialize instances
+      this.synchronize();
+   }
+
+   /*XMLIndividual hCache with XMLIndividualRole(container=this,xsdType=null);
+   HCache hcacheProperty  {
+      HCache get() {
+         return hCache;
+      }
+      set(HCache value) {
+         hCache = value;
+      }
+   };
+   XMLIndividual cacheconfig with XMLIndividualRole(container=this);
+   XMLModel otawaSlotMemory with XMLModelSlot(metaModel=null);*/
+
+   /*synchronizationScheme() with  {
+   }*/
+
+   /**
+    * A concept demonstrating link etablishment beween cache in Heptane and cache in Otawa
+    */
+   public concept Cache {
+      XMLIndividual hCache with XMLIndividualRole(container=heptane,xsdType=null);
+      XMLIndividual dCache with XMLIndividualRole(container=otawa,xsdType=null);
+
+      // Constructor used when we have the two instances
+      create(HCache anHCache, DCache aDCache) {
+         hCache = parameters.anHCache;
+         dCache = parameters.aDCache;
+      }
+
+      // If we have only the Heptane instance
+      create::initFromHCache(HCache anHCache) {
+         hCache = parameters.anHCache;
+      }
+      
+      delete::performDelete() {
+      }
+      /*create::add(required int nbsets, required int nbways, required int cachelinesize, required String type, required String replacement_policy, required String level, required String latency) {
+      }*/
+   }
+
+   // This method synchronize instances of Cache with all instances found in Heptane file
+   // I don't know yet "semantic rule" to be used to establish correspondances between instances
+   public synchronize() {
+      MatchingSet<Cache> matchingSet = begin match Cache from this;
+      log "matchingSet=" + matchingSet;
+      for (HCache iteratedHCache : select HCache from heptane) {
+          log " >>> " + iteratedHCache;
+          match Cache
+               in matchingSet from this 
+               where (hCache=iteratedHCache) create::initFromHCache(iteratedHCache);
+      }
+      end match Cache in matchingSet delete::performDelete();
+
+   }
 }
