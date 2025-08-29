@@ -16,7 +16,11 @@ import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
 import XMLComplexType DCACHE_TYPE from [OTAWA_CACHE:"dcache"];
 
 // Types beeing made available at FML level, built using XSD types found in XSD files
+<<<<<<< HEAD
 typedef XMLIndividualType(xsdType=DCACHE_TYPE) as HCache;
+=======
+typedef XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) as HCache;
+>>>>>>> 9fe6674cafa0ab3e0a4b1967911609f34d3cd9cc
 typedef XMLIndividualType(xsdType=DCACHE_TYPE) as DCache;
 
 /**
@@ -57,8 +61,13 @@ model Model4 {
     * A concept demonstrating link etablishment beween cache in Heptane and cache in Otawa
     */
    public concept Cache {
+<<<<<<< HEAD
       XMLIndividual hCache with XMLIndividualRole(container=heptane,xsdType=null);
       XMLIndividual dCache with XMLIndividualRole(container=otawa,xsdType=null);
+=======
+      HCache hCache with XMLIndividualRole(container=heptane,xsdType=HEPTANE_CACHE_TYPE);
+      DCache dCache with XMLIndividualRole(container=otawa,xsdType=DCACHE_TYPE);
+>>>>>>> 9fe6674cafa0ab3e0a4b1967911609f34d3cd9cc
 
       // Constructor used when we have the two instances
       create(HCache anHCache, DCache aDCache) {
@@ -70,6 +79,10 @@ model Model4 {
       create::initFromHCache(HCache anHCache) {
          hCache = parameters.anHCache;
       }
+<<<<<<< HEAD
+      create::createFromBothD(HCache h, DCache d) { hCache = parameters.h; dCache = parameters.d; }
+=======
+>>>>>>> 9fe6674cafa0ab3e0a4b1967911609f34d3cd9cc
       
       delete::performDelete() {
       }
@@ -81,14 +94,67 @@ model Model4 {
    // I don't know yet "semantic rule" to be used to establish correspondances between instances
    public synchronize() {
       MatchingSet<Cache> matchingSet = begin match Cache from this;
+<<<<<<< HEAD
       log "matchingSet=" + matchingSet;
+      /*
+=======
+      //log "matchingSet=" + matchingSet;
+>>>>>>> 9fe6674cafa0ab3e0a4b1967911609f34d3cd9cc
       for (HCache iteratedHCache : select HCache from heptane) {
           log " >>> " + iteratedHCache;
           match Cache
                in matchingSet from this 
                where (hCache=iteratedHCache) create::initFromHCache(iteratedHCache);
       }
+<<<<<<< HEAD
+      */
+      for (HCache h : select HCache from heptane) {
+         Boolean matched = false;
+
+         for (DCache d : select DCache from otawa) {
+
+            // Heptane <-> OTAWA rule via log2 (use bit-shifts)
+            Integer h_nbsets        = h.nbsets;
+            Integer h_nbways        = h.nbways;
+            Integer h_cachelinesize = h.cachelinesize;
+            Integer h_latency       = h.latency;
+      
+            Integer d_row_bits     = d.row_bits;
+            Integer d_way_bits     = d.way_bits;
+            Integer d_block_bits   = d.block_bits;
+            Integer d_miss_penalty = d.miss_penalty;
+      
+            Integer calc_nbsets        = (1 << d_row_bits);
+            Integer calc_nbways        = (1 << d_way_bits);
+            Integer calc_cachelinesize = (1 << d_block_bits);
+      
+            if ( h_nbsets = calc_nbsets
+              and h_nbways = calc_nbways
+              and h_cachelinesize = calc_cachelinesize
+              and h_latency = d_miss_penalty ) {
+      
+              match Cache
+                in matchingSet from this
+                where (hCache = h and dCache = d)
+                createFromBothD(h, d);
+      
+              matched = true;
+            }
+         }
+
+    // If no OTAWA partner, keep at least the Heptane-side instance
+    if (not matched) {
+      match Cache
+        in matchingSet from this
+        where (hCache = h)
+        create::initFromHCache(h);
+    }
+  }
+
+  end match Cache in matchingSet delete::performDelete();
+=======
       end match Cache in matchingSet delete::performDelete();
 
    }
+>>>>>>> 9fe6674cafa0ab3e0a4b1967911609f34d3cd9cc
 }

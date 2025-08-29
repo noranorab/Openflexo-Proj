@@ -16,7 +16,9 @@ import XMLComplexType HEPTANE_CACHE_TYPE from [HEPTANE_WCET:"HeptaneCacheType"];
 import XMLComplexType DCACHE_TYPE from [OTAWA_CACHE:"dcache"];
 
 // Types beeing made available at FML level, built using XSD types found in XSD files
-typedef XMLIndividualType(xsdType=DCACHE_TYPE) as HCache;
+
+typedef XMLIndividualType(xsdType=HeptaneCacheType) as HCache;
+
 typedef XMLIndividualType(xsdType=DCACHE_TYPE) as DCache;
 
 /**
@@ -57,21 +59,17 @@ model Model4 {
     * A concept demonstrating link etablishment beween cache in Heptane and cache in Otawa
     */
    public concept Cache {
-      XMLIndividual hCache with XMLIndividualRole(container=heptane,xsdType=null);
-      XMLIndividual dCache with XMLIndividualRole(container=otawa,xsdType=null);
 
-      // Constructor used when we have the two instances
-      create(HCache anHCache, DCache aDCache) {
-         hCache = parameters.anHCache;
-         dCache = parameters.aDCache;
-      }
+      HCache hCache with XMLIndividualRole(container=heptane,xsdType=HCache);
+      DCache dCache with XMLIndividualRole(container=otawa,xsdType=DCache);
 
       // If we have only the Heptane instance
       create::initFromHCache(HCache anHCache) {
          hCache = parameters.anHCache;
       }
-      create::createFromBothD(HCache h, DCache d) { hCache = parameters.h; dCache = parameters.d; }
-      
+
+      create::createFromBoth(HCache h, DCache d) { hCache = parameters.h; dCache = parameters.d; }
+
       delete::performDelete() {
       }
       /*create::add(required int nbsets, required int nbways, required int cachelinesize, required String type, required String replacement_policy, required String level, required String latency) {
@@ -82,14 +80,19 @@ model Model4 {
    // I don't know yet "semantic rule" to be used to establish correspondances between instances
    public synchronize() {
       MatchingSet<Cache> matchingSet = begin match Cache from this;
+
       log "matchingSet=" + matchingSet;
       /*
+
+      //log "matchingSet=" + matchingSet;
+
       for (HCache iteratedHCache : select HCache from heptane) {
           log " >>> " + iteratedHCache;
           match Cache
                in matchingSet from this 
                where (hCache=iteratedHCache) create::initFromHCache(iteratedHCache);
       }
+
       */
       for (HCache h : select HCache from heptane) {
          Boolean matched = false;
@@ -119,7 +122,7 @@ model Model4 {
               match Cache
                 in matchingSet from this
                 where (hCache = h and dCache = d)
-                createFromBothD(h, d);
+                create::createFromBoth(h, d);
       
               matched = true;
             }
@@ -134,5 +137,8 @@ model Model4 {
     }
   }
 
-  end match Cache in matchingSet delete::performDelete();
+
+      end match Cache in matchingSet delete::performDelete();
+
+   }
 }
