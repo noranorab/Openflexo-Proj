@@ -17,8 +17,7 @@ import XMLComplexType DCACHE_TYPE from [OTAWA_CACHE:"dcache"];
 
 // Types beeing made available at FML level, built using XSD types found in XSD files
 
-typedef XMLIndividualType(xsdType=HeptaneCacheType) as HCache;
-
+typedef XMLIndividualType(xsdType=HEPTANE_CACHE_TYPE) as HCache;
 typedef XMLIndividualType(xsdType=DCACHE_TYPE) as DCache;
 
 /**
@@ -60,15 +59,18 @@ model Model4 {
     */
    public concept Cache {
 
-      HCache hCache with XMLIndividualRole(container=heptane,xsdType=HCache);
-      DCache dCache with XMLIndividualRole(container=otawa,xsdType=DCache);
+      HCache hCache with XMLIndividualRole(container=heptane,xsdType=HEPTANE_CACHE_TYPE);
+      DCache dCache with XMLIndividualRole(container=otawa,xsdType=DCACHE_TYPE);
 
       // If we have only the Heptane instance
       create::initFromHCache(HCache anHCache) {
          hCache = parameters.anHCache;
       }
 
-      create::createFromBoth(HCache h, DCache d) { hCache = parameters.h; dCache = parameters.d; }
+      create::createFromBoth(HCache h, DCache d) { 
+         hCache = parameters.h; 
+         dCache = parameters.d; 
+      }
 
       delete::performDelete() {
       }
@@ -97,46 +99,43 @@ model Model4 {
       for (HCache h : select HCache from heptane) {
          Boolean matched = false;
 
+
          for (DCache d : select DCache from otawa) {
 
             // Heptane <-> OTAWA rule via log2 (use bit-shifts)
-            Integer h_nbsets        = h.nbsets;
-            Integer h_nbways        = h.nbways;
-            Integer h_cachelinesize = h.cachelinesize;
-            Integer h_latency       = h.latency;
+            int h_nbsets        = h.nbsets;
+            int h_nbways        = h.nbways;
+            int h_cachelinesize = h.cachelinesize;
+            int h_latency       = h.latency;
       
-            Integer d_row_bits     = d.row_bits;
-            Integer d_way_bits     = d.way_bits;
-            Integer d_block_bits   = d.block_bits;
-            Integer d_miss_penalty = d.miss_penalty;
+            int d_row_bits     = d.rowBits;
+            int d_way_bits     = d.wayBits;
+            int d_block_bits   = d.blockBits;
+            int d_miss_penalty = d.missPenalty;
       
-            Integer calc_nbsets        = (1 << d_row_bits);
-            Integer calc_nbways        = (1 << d_way_bits);
-            Integer calc_cachelinesize = (1 << d_block_bits);
+            int calc_nbsets        = 1 << d_row_bits;
+            int calc_nbways        = 1 << d_way_bits;
+            int calc_cachelinesize = 1 << d_block_bits;
       
-            if ( h_nbsets = calc_nbsets
-              and h_nbways = calc_nbways
-              and h_cachelinesize = calc_cachelinesize
-              and h_latency = d_miss_penalty ) {
+            if ( h_nbsets == calc_nbsets && h_nbways == calc_nbways && h_cachelinesize == calc_cachelinesize && h_latency == d_miss_penalty ) {
       
               match Cache
                 in matchingSet from this
-                where (hCache = h and dCache = d)
-                create::createFromBoth(h, d);
+                where (hCache=h,dCache=d)
+                create::createFromBoth(h,d);
       
               matched = true;
             }
          }
 
-    // If no OTAWA partner, keep at least the Heptane-side instance
-    if (not matched) {
-      match Cache
-        in matchingSet from this
-        where (hCache = h)
-        create::initFromHCache(h);
-    }
-  }
-
+         // If no OTAWA partner, keep at least the Heptane-side instance
+         if (!matched) {
+            match Cache
+               in matchingSet from this
+               where (hCache=h)
+               create::initFromHCache(h);
+         }
+      }
 
       end match Cache in matchingSet delete::performDelete();
 
